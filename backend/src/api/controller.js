@@ -14,7 +14,7 @@ export async function handleChat(req, res) {
   }
 
   try {
-    // 1. Input Guardrails
+  
     const guardrailCheck = checkInputGuardrails(query);
     if (!guardrailCheck.isValid) {
       return res.status(403).json({ answer: guardrailCheck.reason });
@@ -25,20 +25,17 @@ export async function handleChat(req, res) {
     let rewrites = 0;
     const MAX_REWRITES = 3;
 
-    // C-RAG Loop
+    
     while (rewrites < MAX_REWRITES) {
-      console.log(`[RAG Loop] Iteration ${rewrites + 1} for query: ${currentQuery}`);
 
-      // 2. Query Routing (Hardcoded to vector-store for now)
+      
       const route = await routeQuery(currentQuery);
       if (route !== 'vector-store') {
         return res.json({ answer: "Query routed outside of course context." });
       }
 
-      // 3. Retrieval (includes HyDE & Step-Back internally)
       const candidateDocs = await retrieveDocuments(currentQuery);
 
-      // 4. Re-ranking
       const topDocs = await rerankDocuments(currentQuery, candidateDocs, 5);
 
       if (topDocs.length === 0) {
@@ -46,32 +43,25 @@ export async function handleChat(req, res) {
         break;
       }
 
-      // 5. Generation
       const generatedAnswer = await generateAnswer(query, topDocs);
 
-      // 6. C-RAG Evaluation
       const evaluation = await gradeResponse(query, topDocs, generatedAnswer);
-      console.log(`[C-RAG Eval] Score: ${evaluation.score}, Reason: ${evaluation.reasoning}`);
 
       if (evaluation.score >= 6) {
         finalAnswer = generatedAnswer;
         break; // Good answer, exit loop
       } else {
-        console.log(`[C-RAG] Score below threshold. Missing keywords: ${evaluation.missingKeywords}`);
         if (evaluation.missingKeywords && evaluation.missingKeywords.length > 0) {
-          // Adjust query with missing keywords for the next loop
           currentQuery = `${query} ${evaluation.missingKeywords.join(' ')}`;
         }
         rewrites++;
         
-        // If we hit max rewrites, just use the last generated answer anyway
         if (rewrites === MAX_REWRITES) {
           finalAnswer = generatedAnswer;
         }
       }
     }
 
-    // 7. Output Guardrails
     const safeOutput = checkOutputGuardrails(finalAnswer);
 
     return res.json({ answer: safeOutput });
