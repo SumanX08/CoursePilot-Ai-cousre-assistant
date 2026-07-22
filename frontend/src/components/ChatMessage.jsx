@@ -58,6 +58,9 @@ export default function ChatMessage({ message }) {
         <div className="whitespace-pre-wrap leading-8 text-zinc-100">
           {format(message.content)}
         </div>
+        <p className="text-xs text-zinc-500 mt-3">
+  ⚡ Generated in {message.responseTime}
+</p>
       </div>
     </motion.div>
   );
