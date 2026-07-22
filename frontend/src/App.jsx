@@ -65,7 +65,7 @@ function App() {
     <div className="flex flex-col h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-4 flex items-center">
-        <h1 className="text-xl font-bold text-gray-800">Udemy Advanced RAG Q&A</h1>
+        <h1 className="text-xl font-bold text-gray-800">Udemy Course Related Q&A</h1>
       </header>
 
       {/* Chat Area */}
