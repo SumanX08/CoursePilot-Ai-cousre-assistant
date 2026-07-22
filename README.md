@@ -1,95 +1,206 @@
-# Advanced RAG Pipeline
+# CoursePilot-AI Course Assistant
 
-This project is an advanced Retrieval-Augmented Generation (RAG) pipeline designed to process, index, and query educational course subtitles. It consists of a Node.js/Express backend that handles the data ingestion and querying via LangChain, Pinecone, and OpenAI, and a modern React frontend built with Vite and Tailwind CSS.
+An AI-powered Retrieval-Augmented Generation (RAG) application that answers questions about course content by searching lecture subtitles and returning accurate responses with the relevant lesson name and timestamp.
 
-## 🚀 Features
+---
 
-- **Subtitle Ingestion**: Parses `.srt` and `.vtt` subtitle files from course materials.
-- **Vector Database**: Uses Pinecone for efficient similarity search and vector storage.
-- **LLM Integration**: Powered by OpenAI models via LangChain for high-quality retrieval and conversational response generation.
-- **Modern Frontend**: A fast, responsive user interface built with React, Vite, and Tailwind CSS.
+##  Features
 
-## 🛠️ Tech Stack
+-  Ask natural language questions about the course.
+-  Retrieves the most relevant lecture segments using semantic search.
+-  Returns lesson names and timestamps for easy navigation.
+-  Uses Retrieval-Augmented Generation (RAG) for accurate, context-aware responses.
+-  Fast vector similarity search using Pinecone.
+-  Modern React + Tailwind CSS interface.
 
-### Backend
-- **Node.js & Express**: API server.
-- **LangChain**: LLM orchestration and RAG logic.
-- **Pinecone**: Vector database for storing document embeddings.
-- **OpenAI**: Embeddings and chat models.
-- **Subtitle Parsers**: `node-webvtt` and `subtitles-parser`.
+---
+
+##  Tech Stack
 
 ### Frontend
-- **React 18**: UI library.
-- **Vite**: Build tool and lightning-fast dev server.
-- **Tailwind CSS**: Utility-first CSS framework for styling.
 
-## 📁 Project Structure
+- React
+- Tailwind CSS
+- Framer Motion
+- Lucide React
 
-```text
-.
-├── backend/          # Express API and RAG ingestion logic
-├── frontend/         # React + Vite application
-├── class-subtitle/   # Source subtitle files (.srt, .vtt)
-└── README.md         # Project documentation
+### Backend
+
+- Node.js
+- Express.js
+- LangChain
+- OpenAI API
+
+### Database & Vector Store
+
+- Pinecone Vector Database
+
+---
+
+
+
+##  How It Works
+
+### 1. Subtitle Ingestion
+
+Course subtitle files (`.srt` / `.vtt`) are parsed and cleaned.
+
+---
+
+### 2. Chunking
+
+The subtitles are divided into smaller semantic chunks while preserving metadata such as:
+
+- Lesson name
+- Timestamp
+- Transcript text
+
+---
+
+### 3. Embedding Generation
+
+Each chunk is converted into vector embeddings using OpenAI Embeddings.
+
+---
+
+### 4. Vector Storage
+
+The embeddings are stored inside Pinecone for efficient semantic similarity search.
+
+---
+
+### 5. User Query
+
+When a user asks a question:
+
+- The query is embedded.
+- Pinecone retrieves the most relevant subtitle chunks.
+- Retrieved context is passed to the LLM.
+
+---
+
+### 6. AI Response
+
+The LLM generates an answer using only the retrieved context and includes:
+
+- Accurate explanation
+- Lesson name
+- Timestamp reference
+
+---
+
+##  RAG Pipeline
+
+```
+Course Subtitles
+        │
+        ▼
+ Subtitle Parser
+        │
+        ▼
+ Text Chunking
+        │
+        ▼
+ OpenAI Embeddings
+        │
+        ▼
+ Pinecone Vector Store
+        │
+──────────────────────────────
+        │
+        ▼
+ User Question
+        │
+        ▼
+ Query Embedding
+        │
+        ▼
+ Similarity Search
+        │
+        ▼
+ Relevant Chunks
+        │
+        ▼
+ OpenAI GPT
+        │
+        ▼
+ Final Answer + Lesson + Timestamp
 ```
 
-## ⚙️ Setup Instructions
+---
 
-### 1. Prerequisites
-- [Node.js](https://nodejs.org/) (v16 or higher recommended)
-- An [OpenAI API Key](https://platform.openai.com/)
-- A [Pinecone API Key & Index](https://www.pinecone.io/)
+##  Installation
 
-### 2. Environment Variables
-Create a `.env` file in the `backend` directory and add your necessary environment variables. It should generally look like this:
+### Clone the repository
+
+```bash
+git clone <repository-url>
+cd AI-Course-Assistant
+```
+
+---
+
+### Backend
+
+```bash
+cd backend
+
+npm install
+```
+
+Create a `.env` file
+
 ```env
-OPENAI_API_KEY=your_openai_api_key_here
-PINECONE_API_KEY=your_pinecone_api_key_here
-# Add any other required variables such as PINECONE_INDEX or PORT
+OPENAI_API_KEY=your_openai_key
+
+PINECONE_API_KEY=your_pinecone_key
+
+PINECONE_INDEX_NAME=your_index_name
 ```
 
-### 3. Install Dependencies
+Run subtitle ingestion
 
-**For the Backend:**
 ```bash
-cd backend
-npm install
-```
-
-**For the Frontend:**
-```bash
-cd frontend
-npm install
-```
-
-## 🧠 Data Ingestion
-
-Before querying the application, you must process the subtitle files and index them into your Pinecone vector database.
-
-1. Ensure your `.srt` and `.vtt` files are placed inside the `class-subtitle/` directory at the root of the project.
-2. Run the ingestion script from the `backend` directory:
-```bash
-cd backend
 npm run seed
 ```
-This script will parse the subtitles, chunk the text, generate embeddings using OpenAI, and store them securely in Pinecone.
 
-## 💻 Running the Application
+Start the backend
 
-### Start the Backend Server
 ```bash
-cd backend
-npm start
-```
-The Express API will start and listen for incoming requests.
-
-### Start the Frontend Dev Server
-In a new terminal window, start the frontend:
-```bash
-cd frontend
 npm run dev
 ```
-The React application will now be available (usually at `http://localhost:5173`), allowing you to interact with your RAG pipeline!
 
-## 📜 License
-ISC License
+---
+
+### Frontend
+
+```bash
+cd frontend
+
+npm install
+
+npm run dev
+```
+
+---
+
+## 💻 Example Question
+
+```
+How do API routes work in Expo Router?
+```
+
+Example Response
+
+```
+API Routes allow server-side logic to be written inside the Expo Router project...
+
+Lesson:
+Creating API Routes
+
+Timestamp:
+08:15 - 10:42
+```
+
+---
+
