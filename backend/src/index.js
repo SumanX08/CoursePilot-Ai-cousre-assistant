@@ -14,11 +14,8 @@ app.use(express.json());
 // Routes
 app.use('/api', apiRoutes);
 
-// Basic health check
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok', message: 'RAG Backend is running' });
-});
+
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  
 });
