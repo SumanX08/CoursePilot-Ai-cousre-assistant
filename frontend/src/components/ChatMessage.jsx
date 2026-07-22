@@ -59,7 +59,7 @@ export default function ChatMessage({ message }) {
           {format(message.content)}
         </div>{!isUser?
         <p className="text-xs text-zinc-500 mt-3">
-  ⚡ Generated in {message.responseTime}
+  ⚡ Generated in {message.responseTime} ms
 </p>:<p></p>}
       </div>
     </motion.div>
