@@ -30,7 +30,7 @@ export default function App() {
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setLoading(true);
-
+    const startTime = performance.now();
     try {
       const apiUrl =
         import.meta.env.VITE_API_URL ||
@@ -50,6 +50,7 @@ export default function App() {
       );
 
       const data = await response.json();
+      const responseTime = Math.round(performance.now() - startTime);
 
       setMessages((prev) => [
         ...prev,
@@ -59,6 +60,7 @@ export default function App() {
             data.answer ||
             data.error ||
             "Unable to generate answer.",
+          responseTime,
         },
       ]);
     } catch (err) {
